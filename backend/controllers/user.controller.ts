@@ -5,6 +5,9 @@ import { decode, jwt, sign, verify } from 'hono/jwt'
 
 import { Context } from "hono";
 
+import {  signupInput , signinInput} from "@saurabh-tailor/medium-common";
+
+
 
 export const signup = async(c:Context)=>{
   //prisma starts
@@ -16,7 +19,14 @@ export const signup = async(c:Context)=>{
   try {
     const body = await c.req.json()
    //zod validation
+    const {success} = signupInput.safeParse(body)
     
+    if(!success){
+      c.status(411)
+      return c.json({
+        message:"user cannot created successfully , checkup input fields"
+      })
+    }
    //saving in DB
    const user = await prisma.user.create({
       data:{
@@ -44,6 +54,14 @@ export const signin = async (c:Context)=>{
   }).$extends(withAccelerate())
   //prisma ends
   const body = await c.req.json()
+
+  const {success} = signinInput.safeParse(body)
+  if(!success){
+    c.status(411)
+    return c.json({
+      message:"user cannot created successfully , checkup input fields"
+    })
+  }
 
   const user = await prisma.user.findFirst({
     where:{
