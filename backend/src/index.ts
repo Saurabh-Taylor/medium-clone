@@ -1,4 +1,8 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+
+
+
 
 
 const app = new Hono<{
@@ -16,6 +20,7 @@ import { updateBlog , allBlogs ,createBlog ,getBlogByID } from '../controllers/b
 import { verify } from 'hono/jwt'
 import { Context } from 'hono/jsx'
 
+app.use("/*" , cors())
 
 app.use("/api/v1/blog/*" , async (c, next)=>{
 

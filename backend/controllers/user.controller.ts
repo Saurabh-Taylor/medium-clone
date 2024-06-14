@@ -37,8 +37,8 @@ export const signup = async(c:Context)=>{
    })
 
    const token = await sign({id:user.id , username: user.username} , c.env.JWT_SECRET)
-   c.header("authorization" , token)
-    return c.text('user created Successfully')
+   
+    return c.text(token)
 
   } catch (error:any) {
     c.status(411)
@@ -76,7 +76,6 @@ export const signin = async (c:Context)=>{
   }
 
   const token = await sign({id:user.id , username: user.username} , c.env.JWT_SECRET)
-  c.header("authorization" , token)
-  return c.text("user signed in successfully")
+  return c.text(token)
 
 }
