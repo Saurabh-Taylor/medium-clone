@@ -24,13 +24,20 @@ app.use("/*" , cors())
 
 app.use("/api/v1/blog/*" , async (c, next)=>{
 
-  console.log("logged from blog middleware");
-  const authHeader = c.req.header("authorization") || ""
+  try {
+    console.log("logged from blog middleware");
+    const authHeader = c.req.header("authorization") || ""
+    
+    const user  = await verify(authHeader , c.env.JWT_SECRET) || ""
   
-  const user  = await verify(authHeader , c.env.JWT_SECRET) || ""
+    c.set("userId" , user.id)
+    await next()
+  } catch (error) {
+    return c.json({
+      message:"login first"
 
-  c.set("userId" , user.id)
-  await next()
+    })
+  }
   
 })
 

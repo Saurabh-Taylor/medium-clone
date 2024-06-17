@@ -81,6 +81,16 @@ export const getBlogByID = async (c:Context)=>{
         const blog = await prisma.blog.findFirst({
             where:{
                 id:Number(id)
+            },
+            select:{
+                id:true,
+                title:true,
+                content:true,
+                author:{
+                    select:{
+                        name:true
+                    }
+                }
             }
         })
 
@@ -104,7 +114,18 @@ export const allBlogs = async (c:Context)=>{
     }).$extends(withAccelerate())
     //prisma ends
     try {
-        const blog = await prisma.blog.findMany()
+        const blog = await prisma.blog.findMany({
+            select:{
+                author:{
+                    select:{
+                        name:true
+                    }
+                },
+                content:true,
+                title:true,
+                id:true
+            }
+        })
 
         return c.json({
             message:"success fetched to get blogs",
